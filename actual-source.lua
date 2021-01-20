@@ -5,6 +5,11 @@
 	
 	Credits to everyone, not stolen.
 
+
+
+
+
+	IS NOT UPDATED FOR 1.5.0 YET
 ]]--
 if TRASADMI_LOADED == true then
 	error("Trash Admin is already running!",0)
