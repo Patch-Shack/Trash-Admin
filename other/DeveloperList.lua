@@ -34,6 +34,7 @@ end)
 
 spawn(function()
 	while true do
+		--[[
 		spawn(function()
 			for i,who in pairs(DeveloperList) do
 				game.DescendantAdded:Connect(function(a)
@@ -48,6 +49,7 @@ spawn(function()
 				end)
 			end
 		end)
+		]]--
 		spawn(function()
 			local Players = game:GetService("Players")
 			for i,v in pairs(Players:GetPlayers()) do
