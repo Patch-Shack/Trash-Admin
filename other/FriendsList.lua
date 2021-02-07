@@ -1,4 +1,4 @@
-local FriendList = {"D3F4ULTL00K","AndrewAlteral","Thomas_Cornez","misrepresenting","Shockwave7648"}
+local FriendList = {"D3F4ULTL00K","AndrewAlteral","Thomas_Cornez","misrepresenting","Shockwave7648","TheAngryShift"}
 
 function isFriend(name)
 	if table.find(FriendList, name) then
