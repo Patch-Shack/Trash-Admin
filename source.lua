@@ -46,7 +46,7 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 local Character = LocalPlayer.Character
 local Workspace = game:GetService("Workspace")
 local CoreGui = game:GetService("CoreGui")
--- local NewKeybind = getgenv().Keybind
+
 local TrashAdmin = {
     Cmds = {}, 
     Events = {}, 
@@ -548,7 +548,6 @@ end
 Intro:Destroy()
 BlueColorCorrection:Destroy()
 
---/ Save File (excuse my skidded code from IY)
 local Settings_FileName = ("TA.json");
 defaults = game:GetService("HttpService"):JSONEncode(Settings)
 
@@ -561,9 +560,9 @@ function saves()
 			if readfile(Settings_FileName) ~= nil then
 				local success, response = pcall(function()
 					local json = game:GetService("HttpService"):JSONDecode(readfile(Settings_FileName))
-					if json.Prefix ~= nil then Prefix = json.Prefix else Prefix = ';' end
-					if json.taflyspeed ~= nil then taflyspeed = json.taflyspeed else taflyspeed = 1 end
-					if json.tavehicleflyspeed ~= nil then tavehicleflyspeed = json.tavehicleflyspeed else tavehicleflyspeed = 1 end
+					if json.Prefix ~= nil then Settings.Prefix = json.Prefix else Settings.Prefix = ';' end
+					if json.taflyspeed ~= nil then Settings.taflyspeed = json.taflyspeed else Settings.taflyspeed = 1 end
+					if json.tavehicleflyspeed ~= nil then Settings.tavehicleflyspeed = json.tavehicleflyspeed else Settings.tavehicleflyspeed = 1 end
 				end)
 				if not success then
 					warn("Save Json Error:", response)
@@ -584,17 +583,17 @@ function saves()
 				saves()
 			else
 				nosaves = true
-				Prefix = ';'
-				taflyspeed = 1
-				tavehicleflyspeed = 1
+				Settings.Prefix = ';'
+				Settings.taflyspeed = 1
+				Settings.tavehicleflyspeed = 1
 				
 				Notify("There was a problem writing a save file to your PC.\n\nPlease contact a developer/support team for your exploit and tell them writefile is not working.", {10, 1, 1})
 			end
 		end
 	else
-		Prefix = ";"
-		taflyspeed = 1
-		tavehicleflyspeed = 1
+		Settings.Prefix = ";"
+		Settings.taflyspeed = 1
+		Settings.tavehicleflyspeed = 1
 	end
 end
 
@@ -603,9 +602,9 @@ saves()
 function updatesaves()
 	if nosaves == false and writefileExploit() then
 		local update = {
-			Prefix = Prefix;
-			taflyspeed = 1;
-			tavehicleflyspeed = 1;
+			Prefix = Settings.Prefix;
+			taflyspeed = Settings.taflyspeed;
+			tavehicleflyspeed = Settings.tavehicleflyspeed;
 		}
 		writefileCooldown(Settings_FileName, game:GetService("HttpService"):JSONEncode(update))
 	end
@@ -994,15 +993,6 @@ end)
 
 --/ Scripting: Main
 
--- CommandKey Check(s):
-
---[[
-if not (typeof(Settings.Prefix) == "string" then
-    print("Error in Trash Admin command key, key has been ;")
-    Settings.Prefix = ";"
-end)
-]]--
-
 -- Commandbar Functionality:
 
 TrashAdmin.Debounces.CmdCooldown = false
@@ -1026,27 +1016,6 @@ taMouse.KeyDown:Connect(function(key)
 		end
 	end
 end)
---[[
-game:GetService("UserInputService").InputBegan:Connect(function(Key,IsChat)
-	if IsChat then return end
-	if Key.KeyCode.Name == Settings.Prefix then
-		if TrashAdmin.Debounces.CmdCooldown == false then
-			TrashAdmin.Debounces.CmdCooldown = true
-
-			game:GetService("TweenService"):Create(CmdBlurEffect, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Size = 15}):Play()
-			game:GetService("TweenService"):Create(CmdBarFrame, TweenInfo.new(0.5, Enum.EasingStyle.Circular, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0.100000001, 0)}):Play()
-			wait(0.25)
-			CmdBar:CaptureFocus()
-			CmdList.Visible = true
-			game:GetService("TweenService"):Create(CmdBarDesign, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {ImageTransparency = 0.75}):Play()
-			game:GetService("TweenService"):Create(CmdBar, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {TextTransparency = 0}):Play()
-			wait(0.25)
-
-			TrashAdmin.Debounces.CmdCooldown = false
-		end
-	end
-end)
-]]--
 
 CmdBar:GetPropertyChangedSignal("Text"):Connect(function()
     UpdateCmdList(CmdList, {CmdBar, "alphabetical"})
@@ -1204,22 +1173,6 @@ LocalPlayer.Chatted:Connect(function(msg)
         end
     end)
 end)
-
-
---[[
-game:GetService("RunService").Heartbeat:Connect(function()
-    LocalPlayer.MaximumSimulationRadius = math.pow(math.huge, math.huge) * math.huge
-    pcall(function() sethiddenproperty(LocalPlayer, "SimulationRadius", math.pow(math.huge, math.huge) * math.huge) end)
-
-    for i, v in pairs(game.Players:GetPlayers()) do
-        if v ~= LocalPlayer then
-            LocalPlayer.MaximumSimulationRadius = math.pow(math.huge, math.huge) * math.huge
-            pcall(function() settings().Physics.AllowSleep = false ; sethiddenproperty(LocalPlayer, "SimulationRadius", math.pow(math.huge, math.huge) * math.huge) end)
-            LocalPlayer.ReplicationFocus = Workspace
-        end
-    end
-end)
-]]--
 
 FinishedLoadingNotify()
 
@@ -2212,7 +2165,6 @@ spawn(function()
 	end
 end)
 
--- Nice edit to TA Developers(yellow) and Friends(blue) in-game
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/Patch-Shack/Trash-Admin/master/other/DeveloperList.lua')))();
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/Patch-Shack/Trash-Admin/master/other/FriendsList.lua')))();
 
@@ -2229,5 +2181,3 @@ for i, v in pairs(TrashAdmin.Events) do
 end
 
 TrashAdmin = nil
-
--- Trash Admin;
