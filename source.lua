@@ -392,15 +392,6 @@ function Notify(message, possibletimer)
     end)
 end
 
-function AddDescLabel(obj, val)
-	--[[
-	local m = Instance.new("StringValue")
-	m.Name = "Description"
-	m.Parent = obj
-	m.Value = val
-	]]--
-end
-
 CmdList.CanvasSize = UDim2.new(0, 0, 0, CmdListUIListLayout.AbsoluteContentSize.Y)
 CmdListUIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 	CmdList.CanvasSize = UDim2.new(0, 0, 0, CmdListUIListLayout.AbsoluteContentSize.Y)
@@ -426,7 +417,6 @@ function UpdateCmdList(cmdguiobject, cmdlistsettings)
                         
                         local Cmd = ExampleLabel:Clone()
                         Cmd.Name = v[1] .. "_Cmd"
-						AddDescLabel(Cmd, v[2])
                         Cmd.Visible = true
                         Cmd.Parent = cmdguiobject
                         game:GetService("TweenService"):Create(Cmd, TweenInfo.new(0.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {TextTransparency = 0, TextStrokeTransparency = 0.9}):Play()
@@ -450,7 +440,6 @@ function UpdateCmdList(cmdguiobject, cmdlistsettings)
                         
                         local Cmd = ExampleLabel:Clone()
                         Cmd.Name = v[1] .. "_Cmd"
-						AddDescLabel(Cmd, v[2])
                         Cmd.Visible = true
                         Cmd.Parent = cmdguiobject
                         game:GetService("TweenService"):Create(Cmd, TweenInfo.new(035, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {TextTransparency = 0, TextStrokeTransparency = 0.9}):Play()
@@ -608,29 +597,6 @@ function updatesaves()
 	end
 end
 
---// <scriptusers> \\--
-local SomeCheckPlace = {
-	Attachment = "HairAttachment";
-}
-Check1 = game.Players.LocalPlayer.Character:FindFirstChild("Head")
-if Check1 then
-	local Check2 = Check1:FindFirstChild(SomeCheckPlace.Attachment)
-	if Check2 then
-		Check2:Destroy()
-	end
-end
-game.Players.LocalPlayer.CharacterAdded:Connect(function()
-	wait(1)
-	Check3 = game.Players.LocalPlayer.Character:FindFirstChild("Head")
-	if Check3 then
-		local Check4 = Check1:FindFirstChild(SomeCheckPlace.Attachment)
-		if Check4 then
-			Check4:Destroy()
-		end
-	end
-end)
---// <!scriptusers> \\--
-
 local function toClipboard(String) local clipBoard = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set); if clipBoard then clipBoard(String); Notify("Copied to clipboard", {3, 1, 1}); else Notify("Can't use clipboard, printed instead", {3, 1, 1}); print("[Trash Admin]: " .. String) end end
 local function tools(plr) if plr:FindFirstChildOfClass("Backpack"):FindFirstChildOfClass('Tool') or plr.Character:FindFirstChildOfClass('Tool') then return true; end end
 game.Players.LocalPlayer.CharacterAdded:Connect(function() Floating = false; Flying = false; invisRunning = false; end)
@@ -649,8 +615,7 @@ function r15(speaker)
 	end
 end
 
-function FinishedLoadingNotify()
-	-- Check version of TA/Welcome the user to TA
+local function FinishedLoadingNotify()
 	if pcall(function() loadstring(game:HttpGet('https://raw.githubusercontent.com/Patch-Shack/Trash-Admin/master/Version'))() end) then
 		if Storage.Version ~= Vers then
 			local Outdated_Message = ("\n\n\n\n\n\nTrash Admin Outdated!\nYou are currently using " .. Storage.Version .. " while the new version is " .. Vers .. "\nJoin the discord for the new one!\n" .. Storage.Dizzy);
@@ -765,7 +730,7 @@ function bring(speaker,target,fast)
 	end
 end
 
-function endgameprocess()
+local function endgameprocess()
 	game:shutdown()
 end
 
@@ -1000,6 +965,8 @@ taMouse.KeyDown:Connect(function(key)
 	if (key == Settings.Prefix) then
 		if TrashAdmin.Debounces.CmdCooldown == false then
 			TrashAdmin.Debounces.CmdCooldown = true
+			
+			spawn(function() repeat CmdBar.Text = "" until CmdBar.Text == "" end)
 
 			game:GetService("TweenService"):Create(CmdBlurEffect, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Size = 15}):Play()
 			game:GetService("TweenService"):Create(CmdBarFrame, TweenInfo.new(0.5, Enum.EasingStyle.Circular, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0.100000001, 0)}):Play()
@@ -1382,17 +1349,6 @@ AddCommand("unchangestate", "Disable player changestate", function()
 	if game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("-Statechanging") then
 		game.Players.LocalPlayer.Character:FindFirstChild("-Statechanging"):Destroy()
 	end
-end)
-
-AddCommand("discord", "Copy discord invite to clipboard", function()
-	Notify("Copied to Clipboard\n\nInvite is " .. Settings.Dizzy, {10, 1, 1})
-	toClipboard(Storage.Dizzy)
-end)
-
-AddCommand("notifydiscord", "Notify the discord invite", function()
-	-- i usually use the variable NotifyText when I feel like it's too long idk lol
-	local NotifyText = ("Invite is " .. Storage.Dizzy)
-	Notify(NotifyText, {10, 1, 1})
 end)
 
 AddCommand("kill", "Kill a player", function(player)
@@ -1921,62 +1877,12 @@ AddCommand("playerstalker", "what even is this?", function()
 	Notify("Loaded PlayerStalker", {5, 1, 1})
 end)
 
-AddCommand("scriptusers", "See who else is using Trash Admin", function()
-	local Player_Service = game:GetService("Players")
-	for i,v in pairs(Player_Service:GetPlayers()) do
-		local che1 = v.Character:FindFirstChild("Head")
-		if che1 then
-			local che2 = che1:FindFirstChild(SomeCheckPlace.Attachment)
-			if not che2 then
-				local List = {}
-				table.insert(List, v.Name)
-				local Commas = table.concat(List, ", ")
-				local NotifyText = ("Users currently using TA are:\n\n" .. Commas)
-				Notify(NotifyText, {10, 1, 1})
-			end
-		end
-	end
-end)
-
 AddCommand("anchor", "Makes your player unmoveable", function()
 	LocalPlayer.Character.HumanoidRootPart.Anchored = true
 end)
 
 AddCommand("unanchor", "Makes your player moveable again", function()
 	LocalPlayer.Character.HumanoidRootPart.Anchored = false
-end)
-
-simRadius = false
-AddCommand("simulationradius/simradius", "Sets your SimulationRadius to math.huge", function()
-	if sethidden then
-		simRadLoop = game:GetService('RunService').Stepped:Connect(function()
-			if setsimulation then
-				setsimulation(1e308, 1/0)
-			else
-				sethidden(LocalPlayer,"MaxiumSimulationRadius",1/0)
-				sethidden(LocalPlayer,"SimulationRadius", 1e308)
-			end
-		end)
-		simRadius = true
-	else
-		Notify("Your exploit does not support sethiddenproperty", {5, 1, 1})
-	end
-end)
-
-AddCommand("nosimulationradius/nosimradius", "Turns off the SimulationRadius loop and restores values to default", function()
-	if sethidden then
-		if simRadLoop then simRadLoop:Disconnect() end
-		wait()
-		if setsimulation then
-			setsimulation(139,139)
-		else
-			sethidden(LocalPlayer,"MaxiumSimulationRadius",139)
-			sethidden(LocalPlayer,"SimulationRadius", 139)
-		end
-		simRadius = false
-	else
-		Notify("Your exploit does not support sethiddenproperty", {5, 1, 1})
-	end
 end)
 
 AddCommand("saveplace", "Save the place to your Workspace Folder", function()
