@@ -966,12 +966,12 @@ taMouse.KeyDown:Connect(function(key)
 		if TrashAdmin.Debounces.CmdCooldown == false then
 			TrashAdmin.Debounces.CmdCooldown = true
 			
+			CmdBar:CaptureFocus()
 			spawn(function() repeat CmdBar.Text = "" until CmdBar.Text == "" end)
 
 			game:GetService("TweenService"):Create(CmdBlurEffect, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Size = 15}):Play()
 			game:GetService("TweenService"):Create(CmdBarFrame, TweenInfo.new(0.5, Enum.EasingStyle.Circular, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0.100000001, 0)}):Play()
 			wait(0.25)
-			CmdBar:CaptureFocus()
 			CmdList.Visible = true
 			game:GetService("TweenService"):Create(CmdBarDesign, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {ImageTransparency = 0.75}):Play()
 			game:GetService("TweenService"):Create(CmdBar, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {TextTransparency = 0}):Play()
