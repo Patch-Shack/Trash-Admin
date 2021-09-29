@@ -393,11 +393,18 @@ function Notify(message, possibletimer)
 end
 
 function AddDescLabel(obj, val)
+	--[[
 	local m = Instance.new("StringValue")
 	m.Name = "Description"
 	m.Parent = obj
 	m.Value = val
+	]]--
 end
+
+CmdList.CanvasSize = UDim2.new(0, 0, 0, CmdListUIListLayout.AbsoluteContentSize.Y)
+CmdListUIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+	CmdList.CanvasSize = UDim2.new(0, 0, 0, CmdListUIListLayout.AbsoluteContentSize.Y)
+end)
 
 function UpdateCmdList(cmdguiobject, cmdlistsettings)
     if cmdguiobject.Name == "-CmdList" and cmdguiobject.ClassName == "ScrollingFrame" then
@@ -431,9 +438,6 @@ function UpdateCmdList(cmdguiobject, cmdlistsettings)
                         
                         local GetTextSizeY = game:GetService("TextService"):GetTextSize(Cmd.Text, Cmd.TextSize, Cmd.Font, Cmd.AbsoluteSize).Y
                         Cmd.Size = UDim2.new(0.949999988, 0, 0, GetTextSizeY + 10)
-                        
-                        cmdguiobject.CanvasSize = UDim2.new(cmdguiobject.CanvasSize.X.Scale, cmdguiobject.CanvasSize.X.Offset, 0, cmdguiobject.CanvasSize.Y.Offset + Cmd.TextBounds.Y + 15)
-
                     end
                 end
                 
@@ -458,14 +462,8 @@ function UpdateCmdList(cmdguiobject, cmdlistsettings)
                         
                         local GetTextSizeY = game:GetService("TextService"):GetTextSize(Cmd.Text, Cmd.TextSize, Cmd.Font, Cmd.AbsoluteSize).Y
                         Cmd.Size = UDim2.new(0.949999988, 0, 0, GetTextSizeY + 10)
-                        
-                        cmdguiobject.CanvasSize = UDim2.new(cmdguiobject.CanvasSize.X.Scale, cmdguiobject.CanvasSize.X.Offset, 0, cmdguiobject.CanvasSize.Y.Offset + Cmd.TextBounds.Y + 15)
-
                     end
-                end
-                
-                cmdguiobject.CanvasSize = UDim2.new(cmdguiobject.CanvasSize.X.Scale, cmdguiobject.CanvasSize.X.Offset, 0, cmdguiobject.CanvasSize.Y.Offset + 15)
-                
+                end              
             end
         end
 
